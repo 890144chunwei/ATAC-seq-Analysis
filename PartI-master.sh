@@ -34,4 +34,22 @@ do
   samtools index $OUTDIR/Trx_WT1_sort.bam
 done
 
-rm $PROJECTDIR/*fastq $$PROJECTDIR/*zip $$PROJECTDIR/*out.bamn
+rm $PROJECTDIR/*fastq $$PROJECTDIR/*zip $$PROJECTDIR/*out.bam
+
+#samtools rmdup -S $OUTDIR/Trx_WT3.bam $OUTDIR/Trx_WT3_drm.bam
+#samtools sort $OUTDIR/Trx_WT3_drm.bam $OUTDIR/Trx_WT3_drm_sort
+#samtools index $OUTDIR/Trx_WT3_drm_sort.bam
+#alignmentSieve --numberOfProcessors 8 --ATACshift --bam $OUTDIR/Trx_WT3_drm_sort.bam -o $OUTDIR/Trx_WT3_drm_shift.bam
+#samtools sort $OUTDIR/Trx_WT3_drm_shift.bam $OUTDIR/Trx_WT3_drm_shift_sort
+#samtools index $OUTDIR/Trx_WT3_drm_shift_sort.bam
+#bedtools bamtobed -i $OUTDIR/Trx_WT3_drm_shift_sort.bam > $OUTDIR/Trx_WT3.bed
+#bedtools intersect -v -a $OUTDIR/Trx_WT3.bed -b $HOMEDIR/mm10-blacklist.v2.bed > $OUTDIR/Trx_WT3_bl.bed
+bamCoverage -b $OUTDIR/Trx_WT3_drm_shift_sort.bam -bl $HOMEDIR/mm10-blacklist.v2.bed -o $OUTDIR/Trx_WT3_cov.bw --normalizeUsing RPKM
+
+#macs3 callpeak -g mm -f BAMPE -t $OUTDIR/Trx_WT1_drm_shift_sort.bam $OUTDIR/Trx_WT2_drm_shift_sort.bam $OUTDIR/Trx_WT3_drm_shift_sort.bam -q 0.01 -n $OUTDIR/Trx_WT --nomodel --keep-dup=all --call-summits
+#annotatePeaks.pl $OUTDIR/Trx_WT_summits.bed mm10 -gtf $HOMEDIR/mm10/gencode.vM10.chr_patch_hapl_scaff.annotation.gtf > $OUTDIR/Trx_WT.txt
+
+#awk 'OFS="\t" {print $1"."$2"."$3, $1, $2, $3, "."}' $OUTDIR/Trx_WT_peaks.narrowPeak > $OUTDIR/Trx_WT.saf
+#featureCounts -T 7 -p -F SAF -a $OUTDIR/Trx_WT.saf -o $OUTDIR/Trx_WT1_fc.txt $OUTDIR/Trx_WT1_drm_shift_sort.bam
+#featureCounts -T 7 -p -F SAF -a $OUTDIR/Trx_WT.saf -o $OUTDIR/Trx_WT2_fc.txt $OUTDIR/Trx_WT2_drm_shift_sort.bam
+#featureCounts -T 7 -p -F SAF -a $OUTDIR/Trx_WT.saf -o $OUTDIR/Trx_WT3_fc.txt $OUTDIR/Trx_WT3_drm_shift_sort.bam
