@@ -35,7 +35,7 @@ do
   samtools index $OUTDIR/${FILE%_R1.fastq}_shift_sort.bam
   bedtools bamtobed -i $OUTDIR/${FILE%_R1.fastq}_shift_sort.bam > $OUTDIR/${FILE%_R1.fastq}.bed
   bedtools intersect -v -a $OUTDIR/${FILE%_R1.fastq}.bed -b $HOMEDIR/mm10-blacklist.v2.bed > $OUTDIR/${FILE%_R1.fastq}_bl.bed
-  bamCoverage -b $OUTDIR/${FILE%_R1.fastq}_shift_sort.bam -bl $HOMEDIR/mm10-blacklist.v2.bed -o $OUTDIR/${FILE%_R1.fastq}_cov.bw --normalizeUsing RPKM
+  bamCoverage -b $OUTDIR/${FILE%_R1.fastq}_shift_sort.bam -bl $HOMEDIR/mm10-blacklist.v2.bed -o $OUTDIR/${FILE%_R1.fastq}_cov.bw --normalizeUsing CPM
 done
 rm $PROJECTDIR/*fastq $PROJECTDIR/*zip $PROJECTDIR/*shift.bam $PROJECTDIR/*drm.bam $OUTDIR/*unpaired.fastq
 
